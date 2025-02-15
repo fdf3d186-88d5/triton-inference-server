@@ -1,0 +1,66 @@
+apiVersion: 1
+providers:
+  - name: "Triton Server Dashboard"
+    orgId: 1
+    folder: ""
+    type: file
+    disableDeletion: false
+    allowUiUpdates: true
+    options:
+      path: "/var/lib/grafana/dashboards"
+---
+apiVersion: 1
+dashboards:
+  - name: "Triton Inference Server Metrics"
+    uid: "triton-dashboard"
+    title: "Triton Inference Server Dashboard"
+    schemaVersion: 16
+    version: 1
+    panels:
+      - title: "Inference Requests Success"
+        type: "timeseries"
+        datasource: "Prometheus"
+        targets:
+          - expr: "nv_inference_request_success"
+            legendFormat: "Successful Requests"
+        gridPos: { x: 0, y: 0, w: 12, h: 6 }
+        
+      - title: "Inference Compute Time (us)"
+        type: "timeseries"
+        datasource: "Prometheus"
+        targets:
+          - expr: "nv_inference_compute_time_us"
+            legendFormat: "Compute Time"
+        gridPos: { x: 12, y: 0, w: 12, h: 6 }
+
+      - title: "Inference Request Duration (us)"
+        type: "timeseries"
+        datasource: "Prometheus"
+        targets:
+          - expr: "nv_inference_request_duration_us"
+            legendFormat: "Request Duration"
+        gridPos: { x: 0, y: 6, w: 12, h: 6 }
+
+      - title: "GPU Memory Used (Bytes)"
+        type: "timeseries"
+        datasource: "Prometheus"
+        targets:
+          - expr: "nv_gpu_memory_used_bytes"
+            legendFormat: "GPU Memory"
+        gridPos: { x: 12, y: 6, w: 12, h: 6 }
+
+      - title: "GPU Utilization (%)"
+        type: "timeseries"
+        datasource: "Prometheus"
+        targets:
+          - expr: "nv_gpu_utilization"
+            legendFormat: "GPU Utilization"
+        gridPos: { x: 0, y: 12, w: 12, h: 6 }
+
+      - title: "Model Load Count"
+        type: "timeseries"
+        datasource: "Prometheus"
+        targets:
+          - expr: "nv_model_load_count"
+            legendFormat: "Model Loads"
+        gridPos: { x: 12, y: 12, w: 12, h: 6 }

@@ -10,3 +10,6 @@
 
 # Downloaded Assets
 **/downloads
+
+# Dont upload the larger files
+**/None-ResNet-None-CTC.pth
