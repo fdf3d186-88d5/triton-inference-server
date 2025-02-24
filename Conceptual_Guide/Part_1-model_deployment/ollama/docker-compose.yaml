@@ -1,0 +1,33 @@
+services:
+  ollama:
+    image: ollama-2-7b-q8-gguf-v0.0.1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu] # Use host network mode
+    ports:
+      - "11434:11434"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - OLLAMA_HOST="0.0.0.0"
+    runtime: nvidia
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:cuda
+    container_name: open-webui  # Equivalent to --name
+    restart: always  # Equivalent to --restart always
+    shm_size: "256m"
+    ports:
+      - "8080:8080"
+    environment:
+      - 'OLLAMA_BASE_URL=http://host.docker.internal:11434'
+      - 'WEBUI_SECRET_KEY='
+    volumes:
+      - open-webui:/app/backend/data  # Equivalent to -v open-webui:/app/backend/data
+
+volumes:
+  open-webui:

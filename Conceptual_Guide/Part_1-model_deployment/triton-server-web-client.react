@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+
+const LlamaInferenceWebUI = () => {
+    const [inputText, setInputText] = useState('');
+    const [responseText, setResponseText] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!inputText) return;
+        setLoading(true);
+        try {
+            const response = await axios.post('http://localhost:8000/v2/models/llama_3.2_1b_trt/infer', {
+                inputs: [
+                    {
+                        name: 'input_ids',
+                        shape: [1, inputText.length],
+                        datatype: 'INT32',
+                        data: [Array.from(inputText, char => char.charCodeAt(0))]
+                    }
+                ]
+            });
+
+            setResponseText(JSON.stringify(response.data, null, 2));
+        } catch (error) {
+            setResponseText('Error communicating with Triton server');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="flex flex-col items-center p-4 space-y-4">
+            <Card className="w-full max-w-md p-4">
+                <CardContent>
+                    <h1 className="text-xl mb-4">Llama-3.2-1B Inference UI</h1>
+                    <Input
+                        type="text"
+                        placeholder="Enter your text"
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                        className="mb-4 w-full"
+                    />
+                    <Button onClick={handleSubmit} disabled={loading} className="w-full">
+                        {loading ? 'Loading...' : 'Submit'}
+                    </Button>
+                </CardContent>
+            </Card>
+            {responseText && (
+                <Card className="w-full max-w-md p-4">
+                    <CardContent>
+                        <h2 className="text-lg mb-2">Response</h2>
+                        <pre className="text-sm bg-gray-100 p-2 rounded">
+                            {responseText}
+                        </pre>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
+    );
+};
+
+export default LlamaInferenceWebUI;

@@ -176,7 +176,7 @@ if __name__ == "__main__":
     client = httpclient.InferenceServerClient(url="host.docker.internal:8000")
 
     # Read image and create input object
-    raw_image = cv2.imread("./eid.jpg")
+    raw_image = cv2.imread("./OIP.jpg")
     preprocessed_image = detection_preprocessing(raw_image)
 
     detection_input = httpclient.InferInput(
