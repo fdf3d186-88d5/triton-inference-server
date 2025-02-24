@@ -11,11 +11,15 @@ COPY meta-llama-3.2-1B.tar /app/model/meta-llama-3.2-1B.tar
 RUN mkdir -p /app/model && \
     tar -xvf /app/model/meta-llama-3.2-1B.tar -C /app/model/
 
-# Git clone https://github.com/NVIDIA/TensorRT-LLM.git.
-RUN 
+# Git clone https://github.com/NVIDIA/TensorRT-LLM.git
+RUN git clone https://github.com/NVIDIA/TensorRT-LLM.git
+
+# Git clone https://github.com/triton-inference-server/tensorrtllm_backend.git
+RUN git clone https://github.com/triton-inference-server/tensorrtllm_backend.git
+
+# Setup TensorRT-LLM
 RUN apt update -y \
     && apt install -y --no-install-recommends cmake git git-lfs \
-    && git clone https://github.com/NVIDIA/TensorRT-LLM.git \
     && cd /app/TensorRT-LLM \
     && git lfs install \
     && git lfs pull \
@@ -23,9 +27,9 @@ RUN apt update -y \
     && apt update -y \
     && apt install -y tensorrt-dev
 
+# Setup TensorRT-LLM Backend
 RUN mkdir /mnt/ \
     && cd /mnt \
-    && git clone https://github.com/triton-inference-server/tensorrtllm_backend.git \
     && cd tensorrtllm_backend \
     && git submodule update --init --recursive \
     && git lfs install \
