@@ -12,14 +12,22 @@ RUN mkdir -p /app/model && \
     tar -xvf /app/model/meta-llama-3.2-1B.tar -C /app/model/
 
 # Git clone https://github.com/NVIDIA/TensorRT-LLM.git.
-RUN git clone https://github.com/NVIDIA/TensorRT-LLM.git
-
+RUN 
 RUN apt update -y \
-    && apt install -y --no-install-recommends cmake git git git-lfs \
+    && apt install -y --no-install-recommends cmake git git-lfs \
+    && git clone https://github.com/NVIDIA/TensorRT-LLM.git \
     && cd /app/TensorRT-LLM \
+    && git lfs install \
+    && git lfs pull \
     && git submodule update --init --recursive \
     && apt update -y \
-    && apt install -y tensorrt-dev \
+    && apt install -y tensorrt-dev
+
+RUN mkdir /mnt/ \
+    && cd /mnt \
+    && git clone https://github.com/triton-inference-server/tensorrtllm_backend.git \
+    && cd tensorrtllm_backend \
+    && git submodule update --init --recursive \
     && git lfs install \
     && git lfs pull
 
@@ -27,13 +35,11 @@ RUN apt update -y \
 COPY convert_model.sh /app/
 COPY prepare_configs.sh /app/
 COPY exec_triton_server.sh /app/
-COPY cmake.sh /app/
 
 # Make scripts executable
 RUN chmod +x /app/convert_model.sh \
     && chmod +x /app/prepare_configs.sh \
-    && chmod +x /app/exec_triton_server.sh \
-    && chmod +x /app/cmake.sh
+    && chmod +x /app/exec_triton_server.sh
 
 # Convert model, prepare model repository and run the Triton Inference Server.
 ENTRYPOINT ["/bin/bash", "/app/exec_triton_server.sh"]
