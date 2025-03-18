@@ -14,5 +14,5 @@
 # Dont upload the larger files
 **/None-ResNet-None-CTC.pth
 Conceptual_Guide/Part_1-model_deployment/.hf_token
-Conceptual_Guide/Part_1-model_deployment/meta-llama-3.2-1B.tar
+Conceptual_Guide/Part_1-model_deployment/tritom/meta-llama-3.2-1B.tar
 Conceptual_Guide/Part_1-model_deployment/ollama/llama-2-7b.Q8_0.gguf
