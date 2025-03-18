@@ -20,7 +20,7 @@ RUN git clone https://github.com/triton-inference-server/tensorrtllm_backend.git
 # Setup TensorRT-LLM
 RUN apt update -y \
     && apt install -y --no-install-recommends cmake git git-lfs \
-    && cd /app/TensorRT-LLM \
+    && cd /app/TensorRT-LLM \ 
     && git lfs install \
     && git lfs pull \
     && git submodule update --init --recursive \
@@ -36,7 +36,7 @@ RUN mkdir /mnt/ \
     && git lfs pull
 
 # Copy scripts
-COPY convert_model.sh /app/
+COPY convert_model.sh /app/ 
 COPY prepare_configs.sh /app/
 COPY exec_triton_server.sh /app/
 
